@@ -22,6 +22,7 @@ namespace KeypressEvent
             Logger = base.Logger;
             Instance = this;
 
+            ContentHandler.AssignProvider(new KeypressContentProvider());
             ContentHandler.AssignEvent(new KeypressContentEvent());
 
             // Initialize mod on persistent GameObject

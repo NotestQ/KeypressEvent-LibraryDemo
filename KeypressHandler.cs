@@ -20,28 +20,9 @@ namespace KeypressEvent
             {
                 if (Input.GetKeyDown(keyCode))
                 {
-                    var player = ContentHandler.GetPlayerWithCamera();
-                    if (player == null) return;
-
-                    var componentInParent = new KeypressContentProvider(keyCode.ToString());
-                    ContentPolling.contentProviders.Add(componentInParent, 1);
-
-                    if (player.IsLocal) return;
-
-                    CSteamID steamID;
-                    bool idSuccess = SteamAvatarHandler.TryGetSteamIDForPlayer(player, out steamID);
-                    if (idSuccess == false) return;
-
-                    MyceliumNetwork.RPCTarget(KeypressEvent.modID, nameof(RPCHandleEvent), steamID, ReliableType.Reliable, keyCode.ToString());
+                    ContentHandler.PollAndReplicateProvider(new KeypressContentProvider(), 400, keyCode.ToString());
                 }
             }
-        }
-
-        [CustomRPC]
-        private static void RPCHandleEvent(string eventType)
-        {
-            var componentInParent = new KeypressContentProvider(eventType);
-            ContentPolling.contentProviders.Add(componentInParent, 1);
         }
     }
 }
